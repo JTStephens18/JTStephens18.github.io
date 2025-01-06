@@ -469,11 +469,11 @@ if (any(greaterThan(abs(pos2d.xyz), vec3(1.3)))) {
 }
 ```
 
-Projection transformations, such as perspective projection, are inherently non-linear (not affine). These transformations are spatially variably, meaning their effects — like skewing, warping, or distortion — depend on an object’s position or depth. For instance, perspective projection makes objects closer to the camera appear larger while shrinking those farther away, often discarding depth information. It is much simpler to apply a non-linear transformation to a single point because the point is a deterministic value.
+Projection transformations, such as perspective projection, are inherently non-linear (not affine). These transformations are spatially variable, meaning their effects — like skewing, warping, or distortion — depend on an object’s position or depth. For instance, perspective projection makes objects closer to the camera appear larger while shrinking those farther away, often discarding depth information. It is much simpler to apply a non-linear transformation to a single point because the point is a deterministic value.
 
 In the context of Gaussian distributions, the covariance matrix encodes both the spread of the distribution along different directions (variances) and the relationships between axes (covariances). When transforming a Gaussian to a new coordinate system, its covariance matrix must be updated to reflect the new spread and orientation. However, non-linear (not affine) transformations complicate this process because their effects vary across space, unlike linear (affine) transformations which can be captured with a constant matrix. This means that non-linear transformations applied at one point in the Gaussian distribution (e.g., near the mean) will generally differ from that applied at other points (e.g., farther from the mean). These spatially varying transformations make it challenging to directly determine how the covariance matrix transforms as the Gaussian is mapped to a new coordinate system. Additionally, a non-linear transformation could potentially distort the spread of the Gaussian in complex ways, introducing relationships between axes that were not present in the original distribution.
 
-Instead of tackling this complexity directly, we can create a local approximation by treating the transformation as linear in the immediate vicinity of the Gaussian’s mean. This is a reasonable approach because most of the distribution’s probability is concentrated around the mean. By focusing on this region we can approximate the non-linear transformation using its first order Taylor expansion (the Jacobian) which is a linear mapping.
+Instead of tackling this complexity directly, we can create a local approximation by treating the transformation as linear in the immediate vicinity of the Gaussian’s mean. This is a reasonable approach because most of the distribution’s probability is concentrated around the mean. By focusing on this region we can approximate the non-linear transformation using the first order Taylor expansion (the Jacobian) which is a linear mapping.
 
 To approximate the non-linear transformation locally, we calculate the Jacobian matrix of the transformation function at the mean of the Gaussian. In our case, the non-linear transformation function being applied is the projection transformation which maps coordinates in camera space to clip space.
 
@@ -481,8 +481,8 @@ For a 3D to 2D perspective projection, the Jacobian matrix has the following str
 
 ![Jacobian Matrix]({{ site.baseurl }}/assets/images/jacobianMatrix.png)
 
-The first row represents how changes in x and y affect the new x coordinate (x’) in 2D
-The second row represents how changes in x and y affect the new y coordinate (y’) in 2D
+The first row represents how changes in x and y affect the new x coordinate (x’) in 2D.
+The second row represents how changes in x and y affect the new y coordinate (y’) in 2D.
 The third row is 0 because the perspective projection doesn’t affect the third coordinate.
 
 For a perspective projection transformation, we can use intrinsic camera parameters to construct the Jacobian:
@@ -555,7 +555,7 @@ const char* fragmentShaderSource = R"(
 )";
 ```
 
-And with that, you should be able to rasterize a set of 3D gaussians! This is by no means a comprehensive renderer. But, hopefully I’ve explained it well enough to help you get started or cleared up some confusion you might’ve had.
+And with that, you should be able to rasterize a set of 3D gaussians! This is by no means a comprehensive renderer. But, hopefully I’ve explained it well enough to help you get started or cleared up some confusion you might’ve had. If you read this and are more confused than before.. let me first apologize. Secondly, I would encourage you to check out some of these resources below. If you have any suggestions for improvements or see a mistake I made, please reach out! 
 
 ## References 
 
